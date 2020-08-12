@@ -31,9 +31,6 @@ Example Playbook
   become: yes
   roles:
     - ansible-role-speedtest-ookla
-  vars:
-    php_default_version_debian: "7.2"
-    php_packages: libapache2-mod-php
 ```
 
 Author information
