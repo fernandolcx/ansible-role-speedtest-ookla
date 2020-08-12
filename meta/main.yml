@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: ookla_speedtest
   author: fernandolcx
   description: Ookla speedtest server
   company: Solustic
