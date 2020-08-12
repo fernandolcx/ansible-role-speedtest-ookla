@@ -1,0 +1,87 @@
+---
+# tasks file for ansible-role-speedtest-ookla
+- name: Ensure required packages are installed
+  apt:
+    pkg:
+    - unzip
+    - apache2
+    - libapache2-mod-php
+    - php
+    - curl
+    - wget
+    state: present
+    update_cache: yes
+- name: Disable Apache module 'mod_deflate'
+  apache2_module:
+    name: deflate
+    state: absent
+    force: yes
+- name: Create user group 'ookla'
+  group:
+    name: ookla
+    state: present
+- name: Create user 'ookla' member of group 'ookla'
+  user:
+    name: ookla
+    group: ookla
+    create_home: no
+    shell: /bin/bash
+    state: present
+- name: Create required directories
+  file:
+    path: "{{ ookla_directory }}"
+    state: directory
+    owner: ookla
+    group: ookla
+- name: Download and extract 'HTTP Legacy Fallback' files to /var/www/html
+  unarchive:
+    remote_src: yes
+    src: http://install.speedtest.net/httplegacy/http_legacy_fallback.zip
+    dest: /var/www/html
+    owner: ookla
+    group: ookla
+    creates: /var/www/html/speedtest/upload.php
+- name: Delete unused files
+  file:
+    path: '/var/www/html/speedtest/{{ item }}'
+    state: absent
+  with_items:
+    - upload.asp
+    - upload.aspx
+    - upload.jsp
+- name: Download Ookla Server installer script to {{ ookla_directory }}
+  get_url:
+    url: https://install.speedtest.net/ooklaserver/ooklaserver.sh
+    dest: "{{ ookla_directory }}"
+    mode: 0777
+    owner: ookla
+    group: ookla
+- name: Run Ookla Server installer script
+  command: ./ooklaserver.sh install -f chdir={{ ookla_directory }}
+  args:
+    creates: "{{ ookla_directory }}/OoklaServer"
+  become: yes
+  become_user: ookla
+- name: Create custom systemd service unit for ookla-server
+  template:
+    src: ookla-server.service.j2
+    dest: /lib/systemd/system/ookla-server.service
+- name: Stop instances
+  command: ./ooklaserver.sh stop
+  args:
+    removes: "{{ ookla_directory }}/OoklaServer.pid"  # Não fuciona. O script nao remove o .pid quando para.
+    chdir: "{{ ookla_directory }}"
+- name: Put configuration file in place
+  template:
+    src: OoklaServer.properties.j2
+    dest: "{{ ookla_directory }}/OoklaServer.properties"
+    owner: ookla
+    group: ookla
+  notify:
+    - Restart Ookla daemon
+- name: Enable Ookla daemon at boot
+  systemd:
+    daemon_reload: yes
+    name: ookla-server
+    enabled: yes
+    state: started

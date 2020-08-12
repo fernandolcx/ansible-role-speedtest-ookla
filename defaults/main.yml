@@ -1,0 +1,3 @@
+---
+# defaults file for ansible-role-speedtest-ookla
+ookla_directory: /opt/ookla

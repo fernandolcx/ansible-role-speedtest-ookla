@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  author: fernandolcx
+  description: Ookla speedtest server
+  company: Solustic
+
+  license: license (BSD)
+
+  min_ansible_version: 2.8
+
+  platforms:
+    - name: Debian
+      versions:
+        - 9
+        - 10
+    - name: Ubuntu
+        - xenial
+        - bionic
+        - focal
+  galaxy_tags:
+    - speedtest
+    - ookla
+
+dependencies: []

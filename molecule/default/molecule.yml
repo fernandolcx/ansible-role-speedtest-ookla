@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-ubuntu2004-ansible"
+    privileged: true
+    pre_build_image: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    command: "/usr/sbin/init"
+    exposed_ports:
+    - 5060/tcp
+    - 8080/tcp
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

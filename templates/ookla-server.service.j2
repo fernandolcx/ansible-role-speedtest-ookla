@@ -1,0 +1,13 @@
+[Unit]
+Description=Ookla Server service
+After=network.target
+
+[Service]
+Type=simple
+User=ookla
+ExecStart={{ ookla_directory }}/OoklaServer
+ExecStop=/usr/bin/pkill --pidfile {{ ookla_directory }}/OoklaServer.pid
+PIDFile={{ ookla_directory }}/OoklaServer.pid
+
+[Install]
+WantedBy=multi-user.target
