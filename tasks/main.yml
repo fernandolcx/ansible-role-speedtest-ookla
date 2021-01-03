@@ -60,8 +60,6 @@
   command: ./ooklaserver.sh install -f chdir={{ ookla_directory }}
   args:
     creates: "{{ ookla_directory }}/OoklaServer"
-  become: yes
-  become_user: ookla
 - name: Create custom systemd service unit for ookla-server
   template:
     src: ookla-server.service.j2

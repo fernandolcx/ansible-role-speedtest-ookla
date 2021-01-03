@@ -9,6 +9,8 @@ The service listens on 5060 and 8080.
 
 You can validate your server at https://www.ookla.com/host-tester
 
+You can register your server at https://account.ookla.com/register/servers.
+
 Requirements
 ------------
 
@@ -30,10 +32,18 @@ Example Playbook
   hosts: all
   become: yes
   roles:
-    - ansible-role-speedtest-ookla
+    - fernandolcx.ookla_speedtest
 ```
+
+Run with:
+
+```
+ansible-playbook -i "192.168.0.100:29019," speedtest.yml -u myuser --ask-pass --become --ask-become-pass
+```
+
+
 
 Author information
 ------------------
 
-[Solustic](http://www.solustic.com.br/) - Soluções em tecnologia - 2020
+[Solustic](http://www.solustic.com.br/) - Soluções em tecnologia - 2021
