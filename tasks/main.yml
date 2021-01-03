@@ -56,6 +56,19 @@
     mode: 0777
     owner: ookla
     group: ookla
+- name: Find Ookla objects in "/dev/shm"
+  find:
+    paths: /dev/shm
+    patterns: 'Ookla*'
+  register: shm_files
+- name: Fix permissions of Ookla objects in "/dev/shm"
+  file:
+    path: "{{ item.path }}"
+    owner: ookla
+    group: ookla
+    mode: 0777
+    state: file
+  with_items: "{{ shm_files.files }}"
 - name: Run Ookla Server installer script
   command: ./ooklaserver.sh install -f chdir={{ ookla_directory }}
   args:
