@@ -6,7 +6,10 @@ After=network.target
 Type=simple
 User=ookla
 ExecStart={{ ookla_directory }}/OoklaServer
-ExecStop=/usr/bin/pkill --pidfile {{ ookla_directory }}/OoklaServer.pid
+# ExecStop=/usr/bin/pkill --pidfile {{ ookla_directory }}/OoklaServer.pid
+ExecStop=/usr/bin/kill -9 $MAINPID
+TimeoutStopSec=30
+SendSIGKILL=yes
 PIDFile={{ ookla_directory }}/OoklaServer.pid
 
 [Install]
