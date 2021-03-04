@@ -53,7 +53,7 @@
   get_url:
     url: https://install.speedtest.net/ooklaserver/ooklaserver.sh
     dest: "{{ ookla_directory }}"
-    mode: 0600
+    mode: 0755
     owner: ookla
     group: ookla
 - name: Find Ookla objects in "/dev/shm"
